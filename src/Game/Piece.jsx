@@ -1,4 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
+import style from './Piece.module.css';
 
 function Piece({ pieceHash }){
 
@@ -15,7 +16,7 @@ function Piece({ pieceHash }){
     }
 
     return (
-        <i className="fa fa-map-marker" onClick={pieceClicked}></i>
+        <i className={`fa fa-map-marker ${style[piece.color]}`} onClick={pieceClicked}></i>
     );
 }
 

@@ -10,7 +10,7 @@ function Path({ color, DT, TD, LR, RL }){
     const direction = `${DT?style.DT:''} ${TD?style.TD:''} ${LR?style.LR:''} ${RL?style.RL:''}`;
 
     return (
-        <div class={`${style.path} ${direction}`}>
+        <div className={`${style.path} ${direction}`}>
             <div>
                 {
                     cells.slice(0, 6).map((value) => {

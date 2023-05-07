@@ -13,7 +13,24 @@ function rollDice(state){
     });
 }
 
+function cloneCell(cell){
+    return {
+        ...cell,
+        pieces: [...cell.pieces],
+    };
+}
+
+function clonePiece(piece){
+    return {
+        ...piece,
+    };
+}
+
 function pieceClicked(state, piece){
+    if(state.turn.all[state.turn.currentTurn] !== piece.color){
+        console.log('Not your turn');
+        return state;
+    }
     if(!state.dice.valueSet){
         console.log('Roll Dice first');
         return state;
@@ -33,12 +50,39 @@ function pieceClicked(state, piece){
     }
 
     let newState = produce(state, draft => {
-        piece = {...piece};
-        currentCell = {...currentCell};
-        nThCell = {...nThCell};
+        piece = clonePiece(piece);
+        currentCell = cloneCell(currentCell);
+        nThCell = cloneCell(nThCell);
         
         pieceRemove(currentCell, piece);
-        pieceAdd(nThCell, state, piece);
+        let removedPieces = pieceAdd(nThCell, state, piece);
+
+        // next player
+        if(removedPieces.length == 0){
+            draft.turn.currentTurn+=1;
+            if(draft.turn.currentTurn === draft.turn.all.length){
+                draft.turn.currentTurn=0;
+            }
+        }
+
+        removedPieces.forEach(piceHash => {
+            let piece = state.pieces[piceHash];
+            piece = {...piece};
+            delete piece.cell;
+            let color = piece.color;
+
+            for(let i=18;i<22;i++){
+                let homeCell = state.cells[hash({color, index: i})];
+                
+                if(homeCell.pieces.length === 0){
+                    homeCell = cloneCell(homeCell);
+                    pieceAdd(homeCell, state, piece);
+                    draft.cells[hash(homeCell)] = homeCell;
+                    draft.pieces[hash(piece)] = piece;
+                    return;
+                }
+            }
+        });
 
         draft.pieces[hash(piece)] = piece;
         draft.cells[hash(currentCell)] = currentCell;

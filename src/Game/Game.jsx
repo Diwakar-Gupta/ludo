@@ -8,7 +8,7 @@ import FinalCell from './FinalCell';
 function Game(){
     return (
         <Provider store={store}>
-            <div class={style.container}>
+            <div className={style.container}>
                 <Home color="red" />
                 <Path color="blue" DT LR />
                 <Home color="blue" />

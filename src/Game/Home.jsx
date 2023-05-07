@@ -3,9 +3,9 @@ import Cell from './Cell';
 
 function Home({ color }){
     return (
-        <div class={`${style.home} ${color}`}>
-            <div class={style.borderOnly}>
-                <div class={style.cellContainer}>
+        <div className={`${style.home} ${color}`}>
+            <div className={style.borderOnly}>
+                <div className={style.cellContainer}>
                     <div>
                         <Cell key={0} index={18} round={true} color={color} />
                         <Cell key={1} index={19} round={true} color={color} />

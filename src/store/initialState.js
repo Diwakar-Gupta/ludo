@@ -11,6 +11,7 @@ function Cell(color, index){
 }
 
 export function pieceAdd(self, state, piece){
+    self.pieces = [...self.pieces];
     if(self.isSafe){
         self.pieces.push(hash(piece));
         piece.cell = hash(self);
@@ -139,8 +140,10 @@ function initialState(initState = {[color.Green]: 2, [color.Blue]: 3}){
     putCellsInState(state, red, blue, yellow, green);
 
     state.pieces={};
+    state.turn={all:[], currentTurn: 0};
     Object.keys(initState).forEach(color => {
         let num = initState[color];
+        state.turn.all.push(color);
 
         for(let i=0;i<num;i++){
             let piece = new Piece(color, i);
@@ -149,6 +152,13 @@ function initialState(initState = {[color.Green]: 2, [color.Blue]: 3}){
             state.pieces[hash(piece)] = piece;
         }
     });
+    state.completed={
+        red: [],
+        blue: [],
+        yellow: [],
+        green: [],
+    };
+
     state.dice = {
         rollable : true,
         valueSet : false,
