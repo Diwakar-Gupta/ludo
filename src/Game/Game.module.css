@@ -1,0 +1,9 @@
+.container{
+    display: grid;
+    grid-template-rows: 6fr 3fr 6fr;
+    grid-template-columns: 6fr 3fr 6fr;
+    box-sizing: border-box;
+
+    height: max-content;
+    width: max-content;
+}

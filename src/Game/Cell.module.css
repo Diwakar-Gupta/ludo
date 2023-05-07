@@ -1,0 +1,10 @@
+.cell{
+    text-align: center;
+    border: 1px solid black;
+    height: 2.5rem;
+    width: 2.5rem;
+}
+
+.round{
+    border-radius: 1rem;
+}

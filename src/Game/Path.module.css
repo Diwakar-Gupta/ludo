@@ -1,0 +1,36 @@
+.path{
+    display: flex;
+}
+
+.path > div{
+    display: flex;
+}
+
+.DT.LR{
+    flex-direction: row;
+}
+
+.DT.LR > div{
+    flex-direction: column-reverse;
+}
+
+.DT.RL{
+    flex-direction: column-reverse;
+}
+.DT.RL > div{
+    flex-direction: row-reverse;
+}
+
+.TD.LR{
+    flex-direction: column;
+}
+.TD.LR > div{
+    flex-direction: row;
+}
+
+.TD.RL{
+    flex-direction: row-reverse;
+}
+.TD.RL > div{
+    flex-direction: column;
+}
