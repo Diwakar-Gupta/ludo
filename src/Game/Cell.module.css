@@ -3,8 +3,26 @@
     border: 1px solid black;
     height: 2.5rem;
     width: 2.5rem;
+
+    position: relative;
+}
+
+.cell>*{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 .round{
     border-radius: 1rem;
+}
+
+.safe{
+    font-size: x-large;
+}
+
+.pieceContainer{
+    
 }

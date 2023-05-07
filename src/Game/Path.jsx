@@ -10,25 +10,25 @@ function Path({ color, DT, TD, LR, RL }){
     const direction = `${DT?style.DT:''} ${TD?style.TD:''} ${LR?style.LR:''} ${RL?style.RL:''}`;
 
     return (
-        <div class={`${style.path} ${direction} ${style[color]}`}>
+        <div class={`${style.path} ${direction}`}>
             <div>
                 {
                     cells.slice(0, 6).map((value) => {
-                        return <Cell index={value} />
+                        return <Cell key={value} color={color} index={value} />
                     })
                 }
             </div>
             <div>
                 {
                     cells.slice(6, 12).map((value) => {
-                        return <Cell index={value} />
+                        return <Cell key={value} color={color} index={value} />
                     })
                 }
             </div>
             <div>
                 {
                     cells.slice(12, 18).map((value) => {
-                        return <Cell index={value} />
+                        return <Cell key={value} color={color} index={value} />
                     })
                 }
             </div>

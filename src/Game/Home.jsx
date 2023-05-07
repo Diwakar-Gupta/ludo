@@ -7,12 +7,12 @@ function Home({ color }){
             <div class={style.borderOnly}>
                 <div class={style.cellContainer}>
                     <div>
-                        <Cell round={true} />
-                        <Cell round={true} />
+                        <Cell key={0} index={18} round={true} color={color} />
+                        <Cell key={1} index={19} round={true} color={color} />
                     </div>
                     <div>
-                        <Cell round={true} />
-                        <Cell round={true} />
+                        <Cell key={2} index={20} round={true} color={color} />
+                        <Cell key={3} index={21} round={true} color={color} />
                     </div>
                 </div>
             </div>
