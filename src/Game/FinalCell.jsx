@@ -11,18 +11,20 @@ function FinalCell(){
     }
 
     return (
-        <div>
-            {
-                dice.rollable?(
-                    <button onClick={rollDice}>
-                        {
-                            dice.value?dice.value:'Roll'
-                        }
-                    </button>
-                ):(
-                    <span>{dice.valueSet?dice.value:"Can't roll"}</span>
-                )
-            }
+        <div style={{'position': 'relative'}}>
+            <div className="center">
+                {
+                    dice.rollable?(
+                        <button onClick={rollDice}>
+                            {
+                                dice.value?dice.value:'Roll'
+                            }
+                        </button>
+                    ):(
+                        <span>{dice.valueSet?dice.value:"Can't roll"}</span>
+                    )
+                }
+            </div>
         </div>
     );
 }

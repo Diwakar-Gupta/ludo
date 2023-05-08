@@ -27,12 +27,12 @@ function clonePiece(piece){
 }
 
 function pieceClicked(state, piece){
-    if(state.turn.all[state.turn.currentTurn] !== piece.color){
-        console.log('Not your turn');
-        return state;
-    }
     if(!state.dice.valueSet){
         console.log('Roll Dice first');
+        return state;
+    }
+    if(state.turn.all[state.turn.currentTurn] !== piece.color){
+        console.log('Not your turn');
         return state;
     }
     const value = state.dice.value;
@@ -40,13 +40,30 @@ function pieceClicked(state, piece){
     let currentCell = state.cells[piece.cell];
     let nThCell = currentCell;
 
-    for(let i=0;i<value;i++){
-        nThCell = pieceNextCellFor(nThCell, piece.color);
-        if(!nThCell){
-            console.log('cannot move');
-            return state;
+    if(currentCell.index >= 18){
+        if(value === 6){
+            nThCell = pieceNextCellFor(nThCell, piece.color);
+            nThCell = state.cells[nThCell];
+        } else {
+            console.log('Need 6 to escape');
+            return produce(state, draft => {
+                draft.turn.currentTurn+=1;
+                if(draft.turn.currentTurn === draft.turn.all.length){
+                    draft.turn.currentTurn=0;
+                }
+                draft.dice.rollable = true;
+                draft.dice.valueSet = false;
+            });
         }
-        nThCell = state.cells[nThCell];
+    } else {
+        for(let i=0;i<value;i++){
+            nThCell = pieceNextCellFor(nThCell, piece.color);
+            if(!nThCell){
+                console.log('cannot move');
+                return state;
+            }
+            nThCell = state.cells[nThCell];
+        }
     }
 
     let newState = produce(state, draft => {
@@ -58,7 +75,7 @@ function pieceClicked(state, piece){
         let removedPieces = pieceAdd(nThCell, state, piece);
 
         // next player
-        if(removedPieces.length == 0){
+        if(removedPieces.length === 0){
             draft.turn.currentTurn+=1;
             if(draft.turn.currentTurn === draft.turn.all.length){
                 draft.turn.currentTurn=0;

@@ -1,5 +1,3 @@
-import color from './color';
-
 export function hash({color, index}){
     return `${color}${index}`;
 }
@@ -126,7 +124,7 @@ function putCellsInState(state, red, blue, yellow, green){
     });
 }
 
-function initialState(initState = {[color.Green]: 2, [color.Blue]: 3}){
+function initialState(initState = {'green': 4, 'blue': 4, 'red': 4, 'yellow': 4}){
     let state = {};
     
     let red = getCells(22, 'red');
@@ -141,9 +139,15 @@ function initialState(initState = {[color.Green]: 2, [color.Blue]: 3}){
 
     state.pieces={};
     state.turn={all:[], currentTurn: 0};
+    ['red', 'blue', 'yellow', 'green'].forEach((color) => {
+        if(initState[color]){
+            state.turn.all.push(color);
+        }
+    });
+    state.turn.currentTurn = Math.round(Math.random()*(state.turn.all.length-1));
+    
     Object.keys(initState).forEach(color => {
         let num = initState[color];
-        state.turn.all.push(color);
 
         for(let i=0;i<num;i++){
             let piece = new Piece(color, i);
