@@ -72,7 +72,7 @@ function getCells(num, color){
     return cells;
 }
 
-function mapNextCell({red, blue,yellow, green}){
+function mapNextCell({red, blue,yellow, green, finalCell}){
     let allPaths = [red, blue, yellow, green];
 
     allPaths.forEach(cells => {
@@ -86,6 +86,8 @@ function mapNextCell({red, blue,yellow, green}){
         for(let i=17;i>=13;i--){
             cells[i].nextCell = hash(cells[i-1]);
         }
+
+        cells[6].nextCell = hash(finalCell);
     });
     for(let i=7;i<=11;i++){
         red[i].nextColorCell = {
@@ -132,9 +134,11 @@ function initialState(initState = {'green': 4, 'blue': 4, 'red': 4, 'yellow': 4}
     let yellow = getCells(22, 'yellow');
     let green = getCells(22, 'green');
 
-    mapNextCell({red, blue, yellow, green});
+    let finalCell = new Cell('final', 0); // hash should be final0
+    mapNextCell({red, blue, yellow, green, finalCell});
 
     state.cells = {};
+    state.cells[hash(finalCell)] = finalCell;
     putCellsInState(state, red, blue, yellow, green);
 
     state.pieces={};

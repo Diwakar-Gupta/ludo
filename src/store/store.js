@@ -82,6 +82,20 @@ function canColorMove(color, value, state){
 
 }
 
+function pieceCompleted(piece, state, draft){
+    let color = piece.color;
+    let allPieceInfo = state.pieces.allColor[color];
+    allPieceInfo = {
+        ...allPieceInfo,
+        all: [allPieceInfo.all],
+        completed: [allPieceInfo.completed],
+    };
+    allPieceInfo.completed.push(hash(piece));
+    draft.piece.allColor[color] = allPieceInfo;
+    console.log('completed');
+    console.log(piece);
+}
+
 function pieceClicked(state, piece){
     if(!state.dice.valueSet){
         console.log('Roll Dice first');
@@ -116,6 +130,10 @@ function pieceClicked(state, piece){
         
         pieceRemove(currentCell, piece);
         let removedPieces = pieceAdd(nThCell, state, piece);
+
+        if(piece.nextCell === 'final0'){
+            pieceCompleted(piece, state, draft);
+        }
 
         // next player
         if(removedPieces.length === 0 && value<6){
