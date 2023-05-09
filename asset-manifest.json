@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/ludo/static/css/main.7c998ead.css",
-    "main.js": "/ludo/static/js/main.8a39d90f.js",
+    "main.js": "/ludo/static/js/main.a0b8f064.js",
     "static/js/787.a7b3101a.chunk.js": "/ludo/static/js/787.a7b3101a.chunk.js",
     "index.html": "/ludo/index.html",
     "main.7c998ead.css.map": "/ludo/static/css/main.7c998ead.css.map",
-    "main.8a39d90f.js.map": "/ludo/static/js/main.8a39d90f.js.map",
+    "main.a0b8f064.js.map": "/ludo/static/js/main.a0b8f064.js.map",
     "787.a7b3101a.chunk.js.map": "/ludo/static/js/787.a7b3101a.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.7c998ead.css",
-    "static/js/main.8a39d90f.js"
+    "static/js/main.a0b8f064.js"
   ]
 }
