@@ -138,6 +138,7 @@ function initialState(initState = {'green': 4, 'blue': 4, 'red': 4, 'yellow': 4}
     putCellsInState(state, red, blue, yellow, green);
 
     state.pieces={};
+    state.pieces.allColor={};
     state.turn={all:[], currentTurn: 0};
     ['red', 'blue', 'yellow', 'green'].forEach((color) => {
         if(initState[color]){
@@ -145,23 +146,19 @@ function initialState(initState = {'green': 4, 'blue': 4, 'red': 4, 'yellow': 4}
         }
     });
     state.turn.currentTurn = Math.round(Math.random()*(state.turn.all.length-1));
-    
+
     Object.keys(initState).forEach(color => {
         let num = initState[color];
+        state.pieces.allColor[color] = {all:[], completed:[]};
 
         for(let i=0;i<num;i++){
             let piece = new Piece(color, i);
             pieceAdd(state.cells[hash({color, index:i+18})], state, piece);
             
             state.pieces[hash(piece)] = piece;
+            state.pieces.allColor[color].all.push(hash(piece));
         }
     });
-    state.completed={
-        red: [],
-        blue: [],
-        yellow: [],
-        green: [],
-    };
 
     state.dice = {
         rollable : true,

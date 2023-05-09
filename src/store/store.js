@@ -26,6 +26,62 @@ function clonePiece(piece){
     };
 }
 
+function resetDice(draft){
+    draft.dice.rollable = true;
+    draft.dice.valueSet = false;
+}
+
+function changeTurnNextPlayer(draft){
+    draft.turn.currentTurn+=1;
+    if(draft.turn.currentTurn === draft.turn.all.length){
+        draft.turn.currentTurn=0;
+    }
+}
+
+// return false
+// return {currentCell, newCell}
+function canPieceMove(piece, value, state){
+    let currentCell = state.cells[piece.cell];
+
+    if(currentCell.index >= 18){
+        if(value === 6){
+            let nThCellHash = pieceNextCellFor(currentCell, piece.color);
+            let nThCell = state.cells[nThCellHash];
+            return {currentCell, nThCell};
+        } else {
+            return undefined;
+        }
+    } else {
+        let nThCell = currentCell;
+        for(let i=0;i<value;i++){
+            nThCell = pieceNextCellFor(nThCell, piece.color);
+            if(!nThCell){
+                return undefined;
+            }
+            nThCell = state.cells[nThCell];
+        }
+        return {currentCell, nThCell};
+    }
+}
+// return false
+// return {piece, currentCell, nThCell}
+function canColorMove(color, value, state){
+    let allPiecesHashForColor = state.pieces.allColor[color].all;
+
+    for(let i=0;i<allPiecesHashForColor.length;i++){
+        let piece = state.pieces[allPiecesHashForColor[i]];
+
+        let meta = canPieceMove(piece, value, state);
+        if(meta){
+            return {
+                ...meta,
+                piece: piece,
+            }
+        }
+    }
+
+}
+
 function pieceClicked(state, piece){
     if(!state.dice.valueSet){
         console.log('Roll Dice first');
@@ -37,34 +93,21 @@ function pieceClicked(state, piece){
     }
     const value = state.dice.value;
 
-    let currentCell = state.cells[piece.cell];
-    let nThCell = currentCell;
-
-    if(currentCell.index >= 18){
-        if(value === 6){
-            nThCell = pieceNextCellFor(nThCell, piece.color);
-            nThCell = state.cells[nThCell];
-        } else {
-            console.log('Need 6 to escape');
+    let meta = canPieceMove(piece, value, state);
+    if(!meta){
+        meta = canColorMove(piece.color, value, state);
+        if(!meta){
+            console.log("You can't move any piece with this steps");
             return produce(state, draft => {
-                draft.turn.currentTurn+=1;
-                if(draft.turn.currentTurn === draft.turn.all.length){
-                    draft.turn.currentTurn=0;
-                }
-                draft.dice.rollable = true;
-                draft.dice.valueSet = false;
+                resetDice(draft);
+                changeTurnNextPlayer(draft);
             });
-        }
-    } else {
-        for(let i=0;i<value;i++){
-            nThCell = pieceNextCellFor(nThCell, piece.color);
-            if(!nThCell){
-                console.log('cannot move');
-                return state;
-            }
-            nThCell = state.cells[nThCell];
+        } else {
+            console.log('Try different piece');
+            return state;
         }
     }
+    let {currentCell, nThCell} = meta;
 
     let newState = produce(state, draft => {
         piece = clonePiece(piece);
@@ -75,11 +118,8 @@ function pieceClicked(state, piece){
         let removedPieces = pieceAdd(nThCell, state, piece);
 
         // next player
-        if(removedPieces.length === 0){
-            draft.turn.currentTurn+=1;
-            if(draft.turn.currentTurn === draft.turn.all.length){
-                draft.turn.currentTurn=0;
-            }
+        if(removedPieces.length === 0 && value<6){
+            changeTurnNextPlayer(draft);
         }
 
         removedPieces.forEach(piceHash => {
@@ -105,9 +145,7 @@ function pieceClicked(state, piece){
         draft.cells[hash(currentCell)] = currentCell;
         draft.cells[hash(nThCell)] = nThCell;
 
-        draft.dice.rollable = true;
-        draft.dice.valueSet = false;
-        draft.dice.value = value;
+        resetDice(draft);
     });
     
     return newState;
