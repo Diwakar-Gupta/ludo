@@ -3,7 +3,7 @@ import {produce} from "immer";
 import initialState from "./initialState";
 import { pieceRemove, hash, pieceNextCellFor, pieceAdd } from './initialState';
 
-function currentPlayerColor(state){
+export function currentPlayerColor(state){
     return state.turn.all[state.turn.currentTurn];
 }
 
