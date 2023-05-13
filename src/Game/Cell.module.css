@@ -7,6 +7,10 @@
     position: relative;
 }
 
+.coloredCell>[class='star']{
+    color: white;
+}
+
 .cell>*{
     position: absolute;
     top: 0;

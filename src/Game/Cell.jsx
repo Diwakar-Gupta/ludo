@@ -10,9 +10,9 @@ function Cell({ color, round, index }){
     });
 
     return (
-        <div className={`${style.cell} ${round?style.round:''} ${cell.isColoredCell?cell.color:''} ${cell.isSafe?style.safe:''}`}>
+        <div className={`${style.cell} ${round?style.round:''} ${cell.isColoredCell?`${cell.color} ${style.coloredCell}`:''} ${cell.isSafe?style.safe:''}`}>
             {
-                cell.isSafe?<span key={'star'}>☆</span>:''
+                cell.isSafe?<span className='star' key={'star'}>☆</span>:''
                 // index
             }
             <div key="pieceContainer" className={style.pieceContainer}>
