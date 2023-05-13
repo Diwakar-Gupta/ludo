@@ -3,6 +3,10 @@ import {produce} from "immer";
 import initialState from "./initialState";
 import { pieceRemove, hash, pieceNextCellFor, pieceAdd } from './initialState';
 
+function currentPlayerColor(state){
+    return state.turn.all[state.turn.currentTurn];
+}
+
 function rollDice(state){
     const value = Math.round(Math.random()*5)+1;
 
@@ -10,6 +14,13 @@ function rollDice(state){
         draft.dice.rollable = false;
         draft.dice.valueSet = true;
         draft.dice.value = value;
+
+        let color = currentPlayerColor(state);
+        if(!canColorMove(color, value, state)){
+            resetDice(draft);
+            changeTurnNextPlayer(draft);
+            console.log("You can't move any piece with this steps");
+        }
     });
 }
 
