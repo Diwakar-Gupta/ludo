@@ -23,7 +23,7 @@ function rollDice(state){
             console.log("You can't move any piece with this steps");
         } else if(meta.length === 1) {
             let {piece, currentCell, nThCell} = meta[0];
-            movePiece(state, draft, piece, currentCell, nThCell, value);
+            movePiece(draft, piece, currentCell, nThCell, value);
         }
     });
 }
@@ -48,7 +48,7 @@ function resetDice(draft){
 
 function changeTurnNextPlayer(draft){
     draft.turn.currentTurn+=1;
-    if(draft.turn.currentTurn === draft.turn.all.length){
+    if(draft.turn.currentTurn >= draft.turn.all.length){
         draft.turn.currentTurn=0;
     }
 }
@@ -102,9 +102,9 @@ function canColorMove(color, value, state){
     return meta;
 }
 
-function pieceCompleted(piece, state, draft){
+function pieceCompleted(piece, draft){
     let color = piece.color;
-    let allPieceInfo = state.homeInfo[color];
+    let allPieceInfo = draft.homeInfo[color];
     allPieceInfo = {
         ...allPieceInfo,
         all: [...allPieceInfo.all],
@@ -144,58 +144,79 @@ function pieceClicked(state, piece){
     let {currentCell, nThCell} = meta;
 
     let newState = produce(state, draft => {
-        movePiece(state, draft, piece, currentCell, nThCell, value);
+        movePiece(draft, piece, currentCell, nThCell, value);
     });
     
     return newState;
 }
 
-function movePiece(state, draft, piece, currentCell, nThCell, value){
+function movePiece(draft, piece, currentCell, nThCell, value){
+    let gameOver = false;
     piece = clonePiece(piece);
     currentCell = cloneCell(currentCell);
     nThCell = cloneCell(nThCell);
     
     pieceRemove(currentCell, piece);
-    let removedPieces = pieceAdd(nThCell, state, piece);
+    let removedPieces = pieceAdd(nThCell, draft, piece);
 
     const currPieceCompleted = piece.cell === 'final0';
     if(currPieceCompleted){
-        pieceCompleted(piece, state, draft);
+        pieceCompleted(piece, draft);
     }
 
     const remainingPieceLength = draft.homeInfo[piece.color].all.length - draft.homeInfo[piece.color].completed.length;
 
+
     // next player
     if(remainingPieceLength>0 && (removedPieces.length > 0 || value===6 || currPieceCompleted)){
         // turn with current player
+    } else if(remainingPieceLength === 0){
+        draft.leaderboard[piece.color] = Object.keys(draft.leaderboard).length+1;
+        
+        draft.turn.all = [...draft.turn.all];
+        draft.turn.all.splice(draft.turn.currentTurn, 1);
+
+        if(draft.turn.currentTurn >= draft.turn.all.length){
+            draft.turn.currentTurn=0;
+        }
+        if(draft.turn.all.length === 1){
+            gameOver = true;
+            draft.leaderboard[draft.turn.all[0]] = Object.keys(draft.leaderboard).length+1;
+        }
     } else {
         changeTurnNextPlayer(draft);
     }
-
+    
     removedPieces.forEach(piceHash => {
-        let piece = state.pieces[piceHash];
+        let piece = draft.pieces[piceHash];
         piece = {...piece};
         delete piece.cell;
         let color = piece.color;
-
+        
         for(let i=18;i<22;i++){
-            let homeCell = state.cells[hash({color, index: i})];
+            let homeCell = draft.cells[hash({color, index: i})];
             
             if(homeCell.pieces.length === 0){
                 homeCell = cloneCell(homeCell);
-                pieceAdd(homeCell, state, piece);
+                pieceAdd(homeCell, draft, piece);
                 draft.cells[hash(homeCell)] = homeCell;
                 draft.pieces[hash(piece)] = piece;
                 return;
             }
         }
+        
     });
-
+    
     draft.pieces[hash(piece)] = piece;
     draft.cells[hash(currentCell)] = currentCell;
     draft.cells[hash(nThCell)] = nThCell;
-
-    resetDice(draft);
+    
+    if(gameOver){
+        console.log('Game over');
+        draft.dice.rollable = false;
+    } else {
+        resetDice(draft);
+    }
 }
 
 function reducer(state, action){

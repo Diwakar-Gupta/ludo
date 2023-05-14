@@ -5,10 +5,22 @@ import { currentPlayerColor } from '../store/store';
 
 function Home({ color }){
 
-    const currentChange = useSelector(state => {
+    const [currentChange, rank] = useSelector(state => {
         const currentColor = currentPlayerColor(state);
-        return currentColor === color;
+        const rank = state.leaderboard[color];
+        return [currentColor === color, rank];
     });
+
+    const center = rank?
+    (
+        <span style={{'fontSize': 'xx-large'}}>{rank}</span>
+    ):(
+        currentChange?(
+            <i className="fa fa-asterisk" aria-hidden="true"></i>
+        ):(
+            <></>
+        )
+    );
 
     return (
         <div className={`${style.home} ${color}`}>
@@ -18,13 +30,11 @@ function Home({ color }){
                         <Cell key={0} index={18} round={true} color={color} />
                         <Cell key={1} index={19} round={true} color={color} />
                     </div>
-                    {
-                        currentChange?(
-                            <div><i className="fa fa-asterisk" aria-hidden="true"></i></div>
-                        ):(
-                            <div></div>
-                        )
-                    }
+                    <div className='center'>
+                        {
+                            center?(center):(<></>)
+                        }
+                    </div>
                     <div>
                         <Cell key={2} index={20} round={true} color={color} />
                         <Cell key={3} index={21} round={true} color={color} />

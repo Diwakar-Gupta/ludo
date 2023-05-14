@@ -8,7 +8,7 @@ function Cell(color, index){
     this.pieces = [];
 }
 
-export function pieceAdd(self, state, piece){
+export function pieceAdd(self, draft, piece){
     self.pieces = [...self.pieces];
     if(self.isSafe){
         self.pieces.push(hash(piece));
@@ -19,7 +19,7 @@ export function pieceAdd(self, state, piece){
         piece.cell = hash(self);
         let removed = [];
         self.pieces.forEach(piece2Hash => {
-            let piece2 = state.pieces[piece2Hash];
+            let piece2 = draft.pieces[piece2Hash];
             if(piece.color === piece2.color){
                 newPiece.push(piece2Hash);
             } else {
@@ -135,6 +135,7 @@ function initialState(initState = {'green': 4, 'blue': 4, 'red': 4, 'yellow': 4}
     let green = getCells(22, 'green');
 
     let finalCell = new Cell('final', 0); // hash should be final0
+    finalCell.isSafe = true;
     mapNextCell({red, blue, yellow, green, finalCell});
 
     // Insert Cell in state
@@ -166,6 +167,9 @@ function initialState(initState = {'green': 4, 'blue': 4, 'red': 4, 'yellow': 4}
             state.homeInfo[color].all.push(hash(piece));
         }
     });
+
+    // Leader board
+    state.leaderboard={}
 
     // Insert Dice in state
     state.dice = {
