@@ -137,12 +137,12 @@ function initialState(initState = {'green': 4, 'blue': 4, 'red': 4, 'yellow': 4}
     let finalCell = new Cell('final', 0); // hash should be final0
     mapNextCell({red, blue, yellow, green, finalCell});
 
+    // Insert Cell in state
     state.cells = {};
     state.cells[hash(finalCell)] = finalCell;
     putCellsInState(state, red, blue, yellow, green);
 
-    state.pieces={};
-    state.pieces.allColor={};
+    // Insert Turn in state
     state.turn={all:[], currentTurn: 0};
     ['red', 'blue', 'yellow', 'green'].forEach((color) => {
         if(initState[color]){
@@ -150,20 +150,24 @@ function initialState(initState = {'green': 4, 'blue': 4, 'red': 4, 'yellow': 4}
         }
     });
     state.turn.currentTurn = Math.round(Math.random()*(state.turn.all.length-1));
-
+    
+    // Insert Piece in state
+    state.pieces={};
+    state.homeInfo={};
     Object.keys(initState).forEach(color => {
         let num = initState[color];
-        state.pieces.allColor[color] = {all:[], completed:[]};
+        state.homeInfo[color] = {all:[], completed:[]};
 
         for(let i=0;i<num;i++){
             let piece = new Piece(color, i);
             pieceAdd(state.cells[hash({color, index:i+18})], state, piece);
             
             state.pieces[hash(piece)] = piece;
-            state.pieces.allColor[color].all.push(hash(piece));
+            state.homeInfo[color].all.push(hash(piece));
         }
     });
 
+    // Insert Dice in state
     state.dice = {
         rollable : true,
         valueSet : false,
