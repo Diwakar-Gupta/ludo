@@ -12,4 +12,5 @@
 }
 .piece{
     transform: translateY(-45%);
+    z-index: 100;
 }

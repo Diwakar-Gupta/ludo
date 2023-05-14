@@ -9,12 +9,23 @@ function Cell({ color, round, index }){
         return state.cells[hash({color, index})];
     });
 
+    let star = '';
+    if(cell.isSafe){
+        if(cell.isColoredCell){
+            star = (<span className='star' key={'star'}>
+                        <i className="fa fa-star" aria-hidden="true"></i>
+                    </span>);
+        } else {
+            star = (<span className='star' key={'star'}>
+                        <i className="fa fa-star-o" aria-hidden="true"></i>
+                    </span>);
+        }
+    } else {
+    }
+
     return (
         <div className={`${style.cell} ${round?style.round:''} ${cell.isColoredCell?`${cell.color} ${style.coloredCell}`:''} ${cell.isSafe?style.safe:''}`}>
-            {
-                cell.isSafe?<span className='star' key={'star'}>☆</span>:''
-                // index
-            }
+            {star}
             <div key="pieceContainer" className={style.pieceContainer}>
                 <PieceContainer pieces={cell.pieces} />
             </div>
