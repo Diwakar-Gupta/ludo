@@ -2,5 +2,19 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
+    align-content: center;
     font-size: xx-large;
+}
+
+.pieceSize1{
+    /*  */
+}
+.pieceSize2{
+    font-size: xx-large;
+}
+.pieceSize3{
+    font-size: x-large;
+}
+.pieceSize4{
+    font-size: x-large;
 }

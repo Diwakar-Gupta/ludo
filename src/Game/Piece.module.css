@@ -1,14 +1,14 @@
 .green{
-    color: green;
+    color: #027202;
 }
 .blue{
-    color: blue;
+    color: #00006f;
 }
 .red{
-    color: red;
+    color: #a30000;
 }
 .yellow{
-    color: #d6d600;
+    color: #a9a903;
 }
 .piece{
     transform: translateY(-45%);
